@@ -28,7 +28,7 @@ def reconstruct_one_point(pt1, pt2, m1, m2):
 
 def linear_triangulation(p1, p2, m1, m2):
     """
-    Linear triangulation (Hartley ch 12.2 pg 312) to find the 3D point X
+    Linear triangulation (Hartley, Zisserman ch 12.2 pg 312) to find the 3D point X
     where p1 = m1 * X and p2 = m2 * X. Solve AX = 0.
     :param p1, p2: 2D points in homo. or catesian coordinates. Shape (3 x n)
     :param m1, m2: Camera matrices associated with p1 and p2. Shape (3 x 4)

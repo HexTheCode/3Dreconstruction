@@ -3,7 +3,7 @@ import numpy as np
 
 
 def find_correspondence_points(img1, img2):
-    sift = cv2.xfeatures2d.SIFT_create()
+    sift = cv2.SIFT_create()
 
     # find the keypoints and descriptors with SIFT
     kp1, des1 = sift.detectAndCompute(
@@ -16,7 +16,7 @@ def find_correspondence_points(img1, img2):
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=50)
     flann = cv2.FlannBasedMatcher(index_params, search_params)
-    matches = flann.knnMatch(des1, des2, k=2)
+    matches = flann.knnMatch(des1, des2, k=2) #Usando los k vecinos más cercanos k=2
 
     # Apply Lowe's SIFT matching ratio test
     good = []

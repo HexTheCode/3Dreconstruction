@@ -28,18 +28,18 @@ def house():
     img1 = cv2.imread(input_path + 'house.00' + str(index1) + '.pgm')  # left image
     img2 = cv2.imread(input_path + 'house.00' + str(index2) + '.pgm')
 
-    # fig = plt.figure()
-    # ax = fig.gca(projection='3d')
-    # ax.plot(points3d[0], points3d[1], points3d[2], 'b.')
-    # ax.set_xlabel('x axis')
-    # ax.set_ylabel('y axis')
-    # ax.set_zlabel('z axis')
-    # ax.view_init(elev=135, azim=90)
+    fig = plt.figure()
+    ax = fig.add_subplot(111,projection='3d')
+    ax.plot(points3d[0], points3d[1], points3d[2], 'b.')
+    ax.set_xlabel('x axis')
+    ax.set_ylabel('y axis')
+    ax.set_zlabel('z axis')
+    ax.view_init(elev=135, azim=90)
 
-    # x = cameras[index2].project(points4d)
-    # plt.figure()
-    # plt.plot(x[0], x[1], 'b.')
-    # plt.show()
+    x = cameras[index2].project(points4d)
+    plt.figure()
+    plt.plot(x[0], x[1], 'b.')
+    plt.show()
 
     corner_indexes = processor.read_matrix(
         input_path + '2D/house.nview-corners', np.int)
@@ -102,6 +102,8 @@ print('Computed essential matrix:', (-E / E[0][1]))
 P1 = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0]])
 P2s = structure.compute_P_from_essential(E)
 
+# Encontrando una de las posibles cámaras P2:
+
 ind = -1
 for i, P2 in enumerate(P2s):
     # Find the correct camera parameters
@@ -117,11 +119,11 @@ for i, P2 in enumerate(P2s):
 
 P2 = np.linalg.inv(np.vstack([P2s[ind], [0, 0, 0, 1]]))[:3, :4]
 #tripoints3d = structure.reconstruct_points(points1n, points2n, P1, P2)
-tripoints3d = structure.linear_triangulation(points1n, points2n, P1, P2)
+tripoints3d = structure.linear_triangulation(points1n, points2n, P1, P2) 
 
 fig = plt.figure()
 fig.suptitle('3D reconstructed', fontsize=16)
-ax = fig.gca(projection='3d')
+ax = fig.add_subplot(111,projection='3d')
 ax.plot(tripoints3d[0], tripoints3d[1], tripoints3d[2], 'b.')
 ax.set_xlabel('x axis')
 ax.set_ylabel('y axis')

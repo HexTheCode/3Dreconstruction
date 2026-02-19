@@ -105,8 +105,8 @@ def test():
 
     # Plot actual 3d points
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    ax.set_aspect('equal')
+    ax = fig.add_subplot(111,projection='3d')
+    ax.set_aspect('auto')
     ax.plot(points[0], points[1], points[2], 'b.')
     ax.set_xlabel('x axis')
     ax.set_ylabel('y axis')
