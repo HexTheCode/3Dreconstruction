@@ -88,7 +88,7 @@ H_c1 = np.vstack([c.extrinsic, [0, 0, 0, 1]])
 # Define rotation of camera1 wrt camera2 and
 # translation of camera2 wrt camera1
 rotation_mat_wrt_c1 = transformers.rotation_3d_from_angles(0, -25, 0)
-translation_mat_wrt_c1 = np.matrix([3, 0, 1]).T
+translation_mat_wrt_c1 = np.array([[3], [0], [1]])
 H_c2_c1 = np.hstack([rotation_mat_wrt_c1, translation_mat_wrt_c1])
 H_c1_c2 = extrinsic_from_camera_pose(H_c2_c1)
 

@@ -12,6 +12,7 @@ def find_correspondence_points(img1, img2):
         cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY), None)
 
     # Find point matches
+    # FLANN: Fast Library for Approximate Nearest Neighbors
     FLANN_INDEX_KDTREE = 0
     index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
     search_params = dict(checks=50)

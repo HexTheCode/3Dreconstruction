@@ -107,6 +107,7 @@ def skew(x):
     :param x: 3d vector
     :returns: 3 x 3 skew symmetric matrix from *x*
     """
+    x = np.asarray(x).flatten()
     return np.array([
         [0, -x[2], x[1]],
         [x[2], 0, -x[0]],
