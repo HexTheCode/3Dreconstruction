@@ -22,8 +22,8 @@ def plot_projections(points):
 def plot_cube(points3d, title=''):
     fig = plt.figure()
     fig.suptitle(title, fontsize=16)
-    ax = fig.gca(projection='3d')
-    ax.set_aspect('equal')
+    ax = fig.add_subplot(111,projection='3d')
+    ax.set_aspect('auto')
     ax.plot(points3d[0], points3d[1], points3d[2], 'b.')
     ax.set_xlabel('x axis')
     ax.set_ylabel('y axis')
@@ -145,8 +145,8 @@ structure.plot_epipolar_lines(points1n, points2n, E)
 plot_projections([points1, points2])
 
 ax = plot_cube(points3d, 'Original')
-cam_corners1 = camera_corners(c)
-cam_corners2 = camera_corners(c2)
+cam_corners1 = camera_corners(c,1)
+cam_corners2 = camera_corners(c2,1)
 ax.plot(cam_corners1[0], cam_corners1[1], cam_corners1[2], 'g-')
 ax.plot(cam_corners2[0], cam_corners2[1], cam_corners2[2], 'r-')
 
