@@ -2,8 +2,8 @@ import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
  
-img1 = cv.imread('imgs/left.jpg', cv.IMREAD_GRAYSCALE)  #queryimage # left image
-img2 = cv.imread('imgs/right.jpg', cv.IMREAD_GRAYSCALE) #trainimage # right image
+img1 = cv.imread('img/left.jpg', cv.IMREAD_GRAYSCALE)  #queryimage # left image
+img2 = cv.imread('img/right.jpg', cv.IMREAD_GRAYSCALE) #trainimage # right image
 
 # Reducir a la mitad de ancho y alto
 #img1 = cv.resize(img1_raw, (img1_raw.shape[1]//2, img1_raw.shape[0]//2))
