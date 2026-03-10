@@ -1,4 +1,50 @@
 import numpy as np
+import numpy as np
+
+
+def find_correspondence_points(img1, img2):
+    """
+    Find correspondence points among two images, img1 and img2. Use SIFT method to
+    find keypoints and then apply Lowe's SIFT matching ratio test to return pair of points
+    that are homologs in the two images.
+    :param img1: one of the two image to find correspondence
+    :param img2: the other image to find correspondence
+    :return: Tuple (pts1, pts2) of coordinates for the homologs points from the two images
+    """
+    sift = cv2.SIFT_create()
+
+    # find the keypoints and descriptors with SIFT
+    kp1, des1 = sift.detectAndCompute(
+        cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY), None)
+    kp2, des2 = sift.detectAndCompute(
+        cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY), None)
+
+    # Find point matches
+    # FLANN: Fast Library for Approximate Nearest Neighbors
+    FLANN_INDEX_KDTREE = 0
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    search_params = dict(checks=50)
+    flann = cv2.FlannBasedMatcher(index_params, search_params)
+    matches = flann.knnMatch(des1, des2, k=2) #Usando los k vecinos más cercanos k=2
+
+    # Apply Lowe's SIFT matching ratio test
+    good = []
+    for m, n in matches:
+        if m.distance < 0.8 * n.distance:
+            good.append(m)
+
+    src_pts = np.asarray([kp1[m.queryIdx].pt for m in good])
+    dst_pts = np.asarray([kp2[m.trainIdx].pt for m in good])
+
+    # Constrain matches to fit homography
+    retval, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 100.0)
+    mask = mask.ravel()
+
+    # We select only inlier points
+    pts1 = src_pts[mask == 1]
+    pts2 = dst_pts[mask == 1]
+
+    return pts1.T, pts2.T
 
 
 def read_matrix(path, astype=np.float64):

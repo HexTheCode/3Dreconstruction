@@ -2,6 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def reconstruct_points(p1, p2, m1, m2):
+    """
+        Computes the camera matrix from a set of homologs points
+        pt1 and m1 * X are parallel and cross product = 0
+        pt1 x m1 * X  =  pt2 x m2 * X  =  0
+    """
     num_points = p1.shape[1]
     res = np.ones((4, num_points))
 
@@ -13,6 +18,7 @@ def reconstruct_points(p1, p2, m1, m2):
 
 def reconstruct_one_point(pt1, pt2, m1, m2):
     """
+        Computes the camera matrix from a pair of homologs points
         pt1 and m1 * X are parallel and cross product = 0
         pt1 x m1 * X  =  pt2 x m2 * X  =  0
     """
@@ -56,6 +62,8 @@ def compute_epipole(F):
     """ Computes the (right) epipole from a
         fundamental matrix F.
         (Use with F.T for left epipole.)
+        :param F: Fundamental Matrix
+        :return: epipole
     """
     # return null space of F (Fx=0)
     U, S, V = np.linalg.svd(F)
@@ -175,13 +183,6 @@ def correspondence_matrix(p1, p2):
         p2x, p2y, np.ones(len(p1x))
     ]).T
 
-    return np.array([
-        p2x * p1x, p2x * p1y, p2x,
-        p2y * p1x, p2y * p1y, p2y,
-        p1x, p1y, np.ones(len(p1x))
-    ]).T
-
-
 def compute_image_to_image_matrix(x1, x2, compute_essential=False):
     """ Compute the fundamental or essential matrix from corresponding points
         (x1, x2 3*n arrays) using the 8 point algorithm.
@@ -228,7 +229,8 @@ def scale_and_translate_points(points):
 def compute_normalized_image_to_image_matrix(p1, p2, compute_essential=False):
     """ Computes the fundamental or essential matrix from corresponding points
         using the normalized 8 point algorithm.
-    :input p1, p2: corresponding points with shape 3 x n
+    :param p1: corresponding point with shape 3 x n
+    :param p2: corresponding point with shape 3 x n
     :returns: fundamental or essential matrix with shape 3 x 3
     """
     n = p1.shape[1]
@@ -249,9 +251,21 @@ def compute_normalized_image_to_image_matrix(p1, p2, compute_essential=False):
     return F / F[2, 2]
 
 
-def compute_fundamental_normalized(p1, p2):
+def compute_fundamental_normalized(p1, p2):    
+    """ Computes the fundamental matrix from corresponding points
+        using the normalized 8 point algorithm.
+    :param p1: corresponding point with shape 3 x n
+    :param p2: corresponding point with shape 3 x n
+    :returns: fundamental matrix with shape 3 x 3
+    """
     return compute_normalized_image_to_image_matrix(p1, p2)
 
 
 def compute_essential_normalized(p1, p2):
+    """ Computes the essential matrix from corresponding points
+    using the normalized 8 point algorithm.
+    :param p1: corresponding point with shape 3 x n
+    :param p2: corresponding point with shape 3 x n
+    :returns: essential matrix with shape 3 x 3
+    """
     return compute_normalized_image_to_image_matrix(p1, p2, compute_essential=True)
