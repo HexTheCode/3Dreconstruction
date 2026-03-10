@@ -172,8 +172,19 @@ def compute_P_from_essential(E):
 
     return P2s
 
-
 def correspondence_matrix(p1, p2):
+    """
+    Build the correspondence matrix A from pairs of points in two images.
+
+    Each row of the matrix corresponds to a pair of points (x1, y1) and
+    (x2, y2). The resulting matrix follows the formulation used in the
+    eight-point algorithm for estimating the fundamental matrix.
+
+    :param p1: Coordinates of points in the first image.
+    :param p2: Coordinates of points in the second image.
+
+    :return: Correspondence matrix A with shape (N,9).
+    """
     p1x, p1y = p1[:2]
     p2x, p2y = p2[:2]
 
