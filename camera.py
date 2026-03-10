@@ -3,7 +3,7 @@ import processor
 import transformers
 
 
-class Camera(object):
+class Camera:
     """ Class for representing pin-hole camera """
 
     def __init__(self, P=None, K=None, R=None, t=None):
