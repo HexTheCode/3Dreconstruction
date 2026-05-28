@@ -32,10 +32,10 @@ $ python3 example.py
 ```
 
 Detected points and matched across 2 images.
-![](testsets/dino_2d_points.png?raw=true)
+![](old/testsets/dino_2d_points.png?raw=true)
 
 3D reconstructed dino with essential matrix   
-![](testsets/dino_3d_reconstructed.png?raw=true)
+![](old/testsets/dino_3d_reconstructed.png?raw=true)
 
 ## 3D to 2D Projection
 ```sh
@@ -43,10 +43,10 @@ $ python3 camera.py
 ```
 
 3D points of model house from Oxford University VGG datasets.
-![](testsets/house_3d.png?raw=true)
+![](old/testsets/house_3d.png?raw=true)
 
 Projected points   
-![](testsets/3d_to_2d_projection.png?raw=true)
+![](old/testsets/3d_to_2d_projection.png?raw=true)
 ## Datasets
 * Oxford University, Visual Geometry Group: http://www.robots.ox.ac.uk/~vgg/data/data-mview.html
 * EPFL computer vision lab: http://cvlabwww.epfl.ch/data/multiview/knownInternalsMVS.html
