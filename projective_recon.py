@@ -4,9 +4,9 @@ import os
 import matplotlib.pyplot as plt
 import argparse
 
-from features import find_correspondence_points
-from sfm import linear_triangulation, compute_epipole, skew
-from ransac_methods import ransac_fundamental_matrix
+from src.features import find_correspondence_points
+from src.sfm import linear_triangulation, compute_epipole, skew
+from src.ransac_methods import ransac_fundamental_matrix
 
 
 def load_image(path):
@@ -22,7 +22,7 @@ def main():
     parser.add_argument("img2", help="Nombre imagen 2 (sin extensión)")
     parser.add_argument("--iters", default=2000, help="Número de iteraciones del RANSAC")
     parser.add_argument("--threshold", default=1.9, help="Threshold del error")
-    parser.add_argument("--imgdir", default="imgs", help="Directorio de imágenes")
+    parser.add_argument("--imgdir", default="dataset/imgs", help="Directorio de imágenes")
     parser.add_argument("--ext", default="JPG", help="Extensión de imagen")
     args = parser.parse_args()
 
@@ -35,8 +35,8 @@ def main():
     img1 = load_image(full_img1)
     img2 = load_image(full_img2)
 
-    kp1_file = f"keypoints/pts1-{img1_path}.npy"
-    kp2_file = f"keypoints/pts2-{img2_path}.npy"
+    kp1_file = f"dataset/keypoints/pts1-{img1_path}.npy"
+    kp2_file = f"dataset/keypoints/pts2-{img2_path}.npy"
 
     if os.path.exists(kp1_file) and os.path.exists(kp2_file):
         print(f"Cargando los keypoints de las imágenes {img1_path}.{args.ext} y {img2_path}.{args.ext}")

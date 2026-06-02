@@ -6,3 +6,7 @@ old/imgs/
 old/utils/
 old/epipoles/
 old/testset
+dataset/imgs/*.jpg
+dataset/imgs/*.JPG
+dataset/calibration_imgs/*.jpg
+dataset/calibration_imgs/*.JPG

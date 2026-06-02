@@ -1,6 +1,6 @@
 import numpy as np
 import random
-from sfm import essential_factorization, compute_essential_matrix_from, compute_fundamental_matrix_from
+from src.sfm import essential_factorization, compute_essential_matrix_from, compute_fundamental_matrix_from
 
 def is_degenerate_sample(pts, eps=1e-3):
     """

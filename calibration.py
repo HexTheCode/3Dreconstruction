@@ -14,7 +14,7 @@ objp[:,:2] = np.mgrid[0:coners_size[1],0:coners_size[0]].T.reshape(-1,2)
 # Arrays to store object points and image points from all the images.
 objpoints = [] # 3d point in real world space
 imgpoints = [] # 2d points in image plane.
-images = glob.glob('img/*.jpg')
+images = glob.glob('dataset/calibratio_imgs/*.jpg')
 print("Imagenes cargadas... "+str(len(images)))
 img = None
 corners2 = None
@@ -35,6 +35,9 @@ for fname in images:
 
 
 ret, K, dist, rvecs, tvecs = cv.calibrateCamera(objpoints, imgpoints, gray.shape[::-1], None, None)
+print("Guardando matriz K:")
+print(f"dataset/matrices/K_matrix_{fname[0]}.npy")
+np.save(f"dataset/matrices/K_matrix_{fname[0]}.npy",K)
 
 print(K)
 print(rvecs)

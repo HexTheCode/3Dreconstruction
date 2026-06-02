@@ -4,9 +4,9 @@ import os
 import matplotlib.pyplot as plt
 import argparse
 
-from features import find_correspondence_points
-from sfm import compute_essential_matrix_from, essential_factorization, linear_triangulation
-from ransac_methods import ransac_essential_matrix
+from src.features import find_correspondence_points
+from src.sfm import compute_essential_matrix_from, essential_factorization, linear_triangulation
+from src.ransac_methods import ransac_essential_matrix
 
 
 def load_image(path):
@@ -21,15 +21,13 @@ def main():
     parser.add_argument("img1", help="Nombre imagen 1 (sin extensión)")
     parser.add_argument("img2", help="Nombre imagen 2 (sin extensión)")
     parser.add_argument("--Kmatrix", default="K_matrix", help="Nombre de la Matriz K izquierda")
-    parser.add_argument("--Kmatrixr", default="K_matrix", help="Nombre de la Matriz K derecha")
     parser.add_argument("--iters", default=2000, help="Número de iteraciones del RANSAC")
     parser.add_argument("--threshold", default=1e-3, help="Threshold del error")
-    parser.add_argument("--imgdir", default="imgs", help="Directorio de imágenes")
+    parser.add_argument("--imgdir", default="dataset/imgs", help="Directorio de imágenes")
     parser.add_argument("--ext", default="JPG", help="Extensión de imagen")
     args = parser.parse_args()
 
     K_matrix_left_path = args.Kmatrix
-    K_matrix_right_path = args.Kmatrixr
 
     img1_path = args.img1
     img2_path = args.img2
@@ -40,8 +38,8 @@ def main():
     img1 = load_image(full_img1)
     img2 = load_image(full_img2)
 
-    kp1_file = f"keypoints/pts1-{img1_path}.npy"
-    kp2_file = f"keypoints/pts2-{img2_path}.npy"
+    kp1_file = f"dataset/keypoints/pts1-{img1_path}.npy"
+    kp2_file = f"dataset/keypoints/pts2-{img2_path}.npy"
 
     if os.path.exists(kp1_file) and os.path.exists(kp2_file):
         print(f"Cargando los keypoints de las imágenes {img1_path}.{args.ext} y {img2_path}.{args.ext}")
@@ -50,7 +48,7 @@ def main():
     else:
         print(f"Calculando y guardando los keypoints de las imágenes {img1_path}.{args.ext} y {img2_path}.{args.ext}")
         pts1, pts2 = find_correspondence_points(img1, img2)
-        os.makedirs("keypoints", exist_ok=True)
+        os.makedirs("dataset/keypoints", exist_ok=True)
         np.save(kp1_file, pts1)
         np.save(kp2_file, pts2)
 
@@ -64,31 +62,26 @@ def main():
     if N < 8:
         raise ValueError("No hay suficientes puntos para estimar la matriz esencial")
     
-    print("Cargando Matriz de parámetros intrínsecos de las matrices K K' ")
-    K1 = np.load(f"{K_matrix_left_path}.npy")
-    if K_matrix_right_path == None:
-        K2 = K1
-    else:
-        K2 = np.load(f"{K_matrix_right_path}.npy")
+    print("Cargando Matriz de parámetros intrínsecos de las matrices K")
+    K = np.load(f"dataset/matrices/{K_matrix_left_path}.npy")
     
     if img1_path == "left13":
-        K1 = np.array([[2864.8, 0, 636.7],[0, 2864.8, 931.9],[0,0,1]])
-        K2 = K1
-    print(K1)
-    print(K2)
+        K= np.array([[2864.8, 0, 636.7],[0, 2864.8, 931.9],[0,0,1]])
+
+    print(K)
 
     E = None
     R, t = None, None
 
     print("Calculando Matriz Esencial")
     
-    E, idx = ransac_essential_matrix(pts1, pts2, K1 , K2, num_iters=int(args.iters),threshold=float(args.threshold))
+    E, idx = ransac_essential_matrix(pts1, pts2, K , K, num_iters=int(args.iters),threshold=float(args.threshold))
 
     print(f"Matriz Esencial calculada con {len(idx)} puntos")
 
     print(E)
 
-    R, t, _ = essential_factorization(pts1, pts2, K1, K2, E, verbose=True)
+    R, t, _ = essential_factorization(pts1, pts2, K, K, E, verbose=True)
     
     print("Matriz R y vector t encontrados con orientación correcta:")
     print(R)
@@ -147,8 +140,8 @@ def main():
 
     # Matrices de proyección
     print("Matrices de Proyección P1 y P2")
-    P1 = K1 @ np.hstack((np.eye(3), np.zeros((3, 1))))
-    P2 = K2 @ np.hstack((R.T, t.reshape(3, 1)))
+    P1 = K @ np.hstack((np.eye(3), np.zeros((3, 1))))
+    P2 = K @ np.hstack((R.T, t.reshape(3, 1)))
     print(P1)
     print(P2)
     

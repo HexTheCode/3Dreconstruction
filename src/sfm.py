@@ -124,16 +124,6 @@ def draw_epipolar_lines(ax, lines, img_shape):
         color = np.random.rand(3,)
         ax.plot([x0, x1], [y0, y1], color)
 
-def draw_epipolar_lines2(ax,lines, p1, p2): # Revisarlo
-    pad = np.ptp(p1, 1) * 0.01
-    mins = np.min(p1, 1)
-    maxes = np.max(p1, 1)
-    # epipolar line parameter and values
-    xpts = np.linspace(mins[0] - pad[0], maxes[0] + pad[0], 100)
-    for line in lines.T:
-        ypts = np.asarray([(line[2] + line[0] * p) / (-line[1]) for p in xpts])
-        valid_idx = ((ypts >= mins[1] - pad[1]) & (ypts <= maxes[1] + pad[1]))
-        ax.plot(xpts[valid_idx], ypts[valid_idx], linewidth=1)
 
 def epipolar_lines(p1, p2, F):
     epipolar_lines2 = (F @ p1).T
