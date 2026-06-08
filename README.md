@@ -1,59 +1,174 @@
-# 3D reconstruction
+# 3D Reconstruction from Stereo Images
 
-3D reconstruction from 2D images pipeline
+Implementation of a complete **3D reconstruction pipeline from two images**, developed as part of a Computer Vision and Multiple View Geometry study project.
 
-Steps:
-1. Detect 2D points
-2. Match 2D points across 2 images
-3. Epipolar geometry   
-  3a. If both intrinsic and extrinsic camera parameters are known, reconstruct with projection matrices.   
-  3b. If only the intrinsic parameters are known, normalize coordinates and calculate the essential matrix.   
-  3c. If neither intrinsic nor extrinsic parameters are known, calculate the fundamental matrix.   
-4. With fundamental or essential matrix, assume P1 = [I 0] and calulate parameters of camera 2.
-5. Triangulate knowing that x1 = P1 * X and x2 = P2 * X.
-6. Bundle adjustment to minimize reprojection errors and refine the 3D coordinates.
+The repository includes both **projective** and **Euclidean reconstruction** methods, together with camera calibration, feature matching, robust estimation using RANSAC, and 3D triangulation.
 
-Note: Steps and code in this repo is my hobby / learning exercise. Ie, its probably not very efficient. If you wish to use a more production-ready library, check out [OpenCV's SFM module](https://github.com/opencv/opencv_contrib/tree/master/modules/sfm). I have a docker environment for it at: https://github.com/alyssaq/reconstruction
+---
 
-## Prerequisites
-* Python 3.5+
-* Install [OpenCV](http://opencv.org/): [Mac installation steps](https://gist.github.com/alyssaq/f60393545173379e0f3f)
-* pip install -r requirements.txt
+## Features
 
-## Example 3D cube reconstruction
-```sh
-$ python3 cube_reconstruction.py
+* Camera calibration using calibration images.
+* Feature detection and matching.
+* Robust estimation of:
+
+  * Fundamental Matrix
+  * Essential Matrix
+* Epipolar geometry visualization.
+* Projective reconstruction from uncalibrated cameras.
+* Euclidean reconstruction from calibrated cameras.
+* Linear triangulation of 3D points.
+* Visualization of reconstructed point clouds.
+* Educational Jupyter notebooks explaining the underlying theory.
+
+---
+
+## Reconstruction Pipeline
+
+The implemented workflow follows the classical Structure from Motion (SfM) pipeline:
+
+1. Camera calibration (optional).
+2. Feature extraction.
+3. Feature matching between stereo images.
+4. Outlier rejection using RANSAC.
+5. Estimation of the Fundamental or Essential Matrix.
+6. Recovery of camera motion.
+7. Triangulation of 3D points.
+8. Projective or Euclidean reconstruction.
+9. Visualization and analysis of results.
+
+---
+
+## Repository Structure
+
+```text
+.
+├── calibration.py              # Camera calibration
+├── projective_recon.py         # Projective reconstruction pipeline
+├── euclid_recon.py             # Euclidean reconstruction pipeline
+├── requirements.txt
+│
+├── src/
+│   ├── features.py             # Feature extraction and matching
+│   ├── ransac_methods.py       # Robust estimation methods
+│   └── sfm.py                  # Structure from Motion utilities
+│
+├── dataset/
+│   ├── calibration_imgs/       # Calibration images
+│   ├── imgs/                   # Stereo image pairs
+│   ├── keypoints/
+│   └── matrices/
+│
+├── notebooks/
+│   ├── Ejemplo Práctico Matriz Fundamental.ipynb
+│   ├── Ejemplo Cálculo Matriz Esencial.ipynb
+│   ├── Reconstrucción Proyectiva.ipynb
+│   ├── Ejemplo de Reconstrucción.ipynb
+│   └── SIFT Personalizado.ipynb
+│
+├── plots/                      # Generated figures and results
+│
+└── old/                        # Legacy implementations and experiments
 ```
 
-## Example Dino 3D reconstruction from 2D images
-Download images from <https://www.robots.ox.ac.uk/~vgg/data/mview/> and place into `imgs/dinos`
-```sh
-$ python3 example.py
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/HexTheCode/3Dreconstruction.git
+cd 3Dreconstruction
 ```
 
-Detected points and matched across 2 images.
-![](old/testsets/dino_2d_points.png?raw=true)
+Create a virtual environment (recommended):
 
-3D reconstructed dino with essential matrix   
-![](old/testsets/dino_3d_reconstructed.png?raw=true)
-
-## 3D to 2D Projection
-```sh
-$ python3 camera.py
+```bash
+python -m venv venv
+source venv/bin/activate
 ```
 
-3D points of model house from Oxford University VGG datasets.
-![](old/testsets/house_3d.png?raw=true)
+Install dependencies:
 
-Projected points   
-![](old/testsets/3d_to_2d_projection.png?raw=true)
-## Datasets
-* Oxford University, Visual Geometry Group: http://www.robots.ox.ac.uk/~vgg/data/data-mview.html
-* EPFL computer vision lab: http://cvlabwww.epfl.ch/data/multiview/knownInternalsMVS.html
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Usage
+
+### Camera Calibration
+
+```bash
+python calibration.py
+```
+
+Computes the intrinsic calibration matrix using the images stored in:
+
+```text
+dataset/calibration_imgs/
+```
+
+---
+
+### Projective Reconstruction
+
+```bash
+python projective_recon.py
+```
+
+Performs reconstruction without requiring camera calibration.
+
+---
+
+### Euclidean Reconstruction
+
+```bash
+python euclid_recon.py
+```
+
+Performs metric reconstruction using calibrated camera parameters.
+
+---
+
+## Example Outputs
+
+The repository generates several visualizations, including:
+
+* Feature correspondences.
+* Epipolar lines.
+* Estimated camera geometry.
+* Reconstructed 3D point clouds.
+
+Examples can be found in the `plots/` directory.
+
+---
+
+## Educational Notebooks
+
+Several Jupyter notebooks are included to illustrate the mathematical foundations of the implemented algorithms:
+
+* Fundamental Matrix estimation.
+* Essential Matrix estimation.
+* SIFT feature extraction.
+* Projective reconstruction.
+* Complete reconstruction examples.
+
+These notebooks are intended for learning and experimentation.
+
+---
 
 ## References
-* [Eight point algorithm](http://ece631web.groups.et.byu.net/Lectures/ECEn631%2013%20-%208%20Point%20Algorithm.pdf)
-* [Multiple View Geometry in Computer Vision (Hartley & Zisserman)](http://www.robots.ox.ac.uk/~vgg/hzbook/)
+
+* Richard Hartley and Andrew Zisserman, *Multiple View Geometry in Computer Vision*.
+* David Forsyth and Jean Ponce, *Computer Vision: A Modern Approach*.
+* OpenCV Documentation.
+* Multiple View Geometry course material from Oxford VGG.
+
+---
 
 ## License
-[MIT](https://alyssaq.github.io/mit-license)
+
+This project is distributed under the MIT License.
