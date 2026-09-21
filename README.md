@@ -1,8 +1,79 @@
-# 3D Reconstruction from Stereo Images
+<h1 align="center">3D Reconstruction from Stereo Images</h1>
+
+<p align="center">
+  <b>From two photographs to a 3D point cloud: a Structure-from-Motion pipeline implemented from scratch in NumPy.</b><br>
+  <sub>Bachelor's Thesis (TFG) · Projective Geometry &amp; 3D Reconstruction</sub>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3-3776AB?logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/NumPy-013243?logo=numpy&logoColor=white" alt="NumPy">
+  <img src="https://img.shields.io/badge/OpenCV-5C3EE8?logo=opencv&logoColor=white" alt="OpenCV">
+  <img src="https://img.shields.io/badge/Matplotlib-11557C" alt="Matplotlib">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License">
+</p>
 
 Implementation of a complete **3D reconstruction pipeline from two images**, developed as part of a Computer Vision and Multiple View Geometry study project.
 
 The repository includes both **projective** and **Euclidean reconstruction** methods, together with camera calibration, feature matching, robust estimation using RANSAC, and 3D triangulation.
+
+---
+
+## Results
+
+Each object was photographed from two viewpoints. SIFT correspondences are matched between both images (left), and the Euclidean pipeline recovers the camera motion and triangulates them into a 3D point cloud (right).
+
+### Sleeping cherub statue
+
+<table>
+  <tr>
+    <td width="60%"><img src="plots/keypoints_left13_and_right13.png" alt="SIFT correspondences, cherub statue"></td>
+    <td width="40%"><img src="plots/euclid_recon_13.png" alt="Euclidean reconstruction, cherub statue"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Matched keypoints</sub></td>
+    <td align="center"><sub>Reconstructed point cloud</sub></td>
+  </tr>
+</table>
+
+### Printed paper cup
+
+<table>
+  <tr>
+    <td width="60%"><img src="plots/keypoints_left19_and_right19.png" alt="SIFT correspondences, paper cup"></td>
+    <td width="20%"><img src="plots/euclid_recon_19_A.png" alt="Euclidean reconstruction, paper cup (view A)"></td>
+    <td width="20%"><img src="plots/euclid_recon_19_B.png" alt="Euclidean reconstruction, paper cup (view B)"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Matched keypoints</sub></td>
+    <td align="center" colspan="2"><sub>Reconstructed point cloud (two viewpoints)</sub></td>
+  </tr>
+</table>
+
+### Toy figure
+
+<table>
+  <tr>
+    <td width="60%"><img src="plots/keypoints_left26_and_right26.png" alt="SIFT correspondences, toy figure"></td>
+    <td width="40%"><img src="plots/euclid_recon_26.png" alt="Euclidean reconstruction, toy figure"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Matched keypoints</sub></td>
+    <td align="center"><sub>Reconstructed point cloud</sub></td>
+  </tr>
+</table>
+
+---
+
+## Highlights
+
+The core geometry is written by hand on top of NumPy; OpenCV is only used for SIFT feature detection, image I/O and chessboard calibration.
+
+* **Normalized eight-point algorithm** (Hartley normalization) for the Fundamental and Essential matrices, with rank-2 / singular-value enforcement.
+* **Custom RANSAC** with Sampson error and degenerate-sample rejection.
+* **Essential matrix factorization** into rotation and translation, choosing among the four solutions via the chirality test.
+* **Linear (DLT) triangulation** of 3D points.
+* **Projective reconstruction** from uncalibrated cameras using the canonical camera pair.
 
 ---
 
